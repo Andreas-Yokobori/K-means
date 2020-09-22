@@ -19,10 +19,41 @@ for cl in clusterList:
     points[0, start:start + cl.getSize()] = np.random.normal(loc=cl.getX(), size=cl.getSize())
     points[1, start:start + cl.getSize()] = np.random.normal(loc=cl.getY(), size=cl.getSize())
     start += cl.getSize()
-print(points)
+#print(points)
 
 plt.scatter(points[0], points[1])
-plt.show()
+
+
+data = np.transpose(points)
+
+def kmeans(K, data, current_means):
+    #current means: matrix with K rows and n columns (n = dimensions of data)
+    #data: m by n matrix (m = number of training points)
+    c_i = np.zeros((data.shape[0], 1))
+    #print("c_i: \n", c_i)
+    index = 0
+    for d in data: 
+        dist = np.sum(np.multiply(d - current_means, d - current_means), axis=1)
+        #print("dist: \n", dist)
+        c_i[index] = np.argmin(dist)
+        index += 1
+    #print(np.squeeze(c_i == 2))
+    #print(data[np.squeeze(c_i == 2)])
+    for i in range(K):
+        print(np.mean(data[np.squeeze(c_i == i)]))
+        current_means[i] = np.mean(data[np.squeeze(c_i == i)])
+    print(current_means)
+
+
+current_means = np.array([[-1, -1], [0, 0], [5, 5]])
+print("data: \n", data)
+#print(current_means)
+
+K = 3
+kmeans(K, data, current_means)
+
+
+#plt.show()
 
 '''
 def generate_cluster(loc1, loc2, size):
